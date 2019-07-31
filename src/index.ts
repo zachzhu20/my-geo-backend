@@ -3,7 +3,7 @@ import express from "express";
 import mongodb from "mongodb";
 
 const app = express();
-const port = 27017; // default port to listen
+const port = 4000; // default port to listen
 const router = express.Router();
 
 const MongoClient = mongodb.MongoClient;
@@ -14,13 +14,19 @@ client.once('open', () => {
     console.log("MongoDB database connection established successfully!");
 });
 
-client.connect(err => {
-    const collection = client.db("myTest").collection("ips").find().toArray().then(r => {
+client.connect().then(c => {
+    c.db("myTest").collection("ips").find().toArray().then(r => {
         console.log(r);
     });
-    // perform actions on the collection object
-    client.close();
-});
+})
+
+// client.connect(err => {
+//     const collection = client.db("myTest").collection("ips").find().toArray().then(r => {
+//         alert(r);
+//     });
+//     // perform actions on the collection object
+//     client.close();
+// });
 
 // router.route("/ips/add").post((req, res) => {
 //     const ip = new Ip(req.body);
@@ -43,6 +49,9 @@ client.connect(err => {
 
 //     });
 // });
+app.get('/', (req, res) => {
+    res.send('HEY!');
+})
 
 app.use("/", router);
 
