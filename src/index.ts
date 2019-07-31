@@ -1,8 +1,12 @@
 import express from "express";
-//import Ip from "../models/ip";
 import mongodb from "mongodb";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
+app.use(cors());//handle CORS
+app.use(bodyParser.json());//parse request and expose on request.body
+
 const port = 4000; // default port to listen
 const router = express.Router();
 
@@ -28,16 +32,15 @@ client.connect().then(c => {
 //     client.close();
 // });
 
-// router.route("/ips/add").post((req, res) => {
-//     const ip = new Ip(req.body);
-//     ip.save()
-//         .then(() => {
-//             res.status(200).json({ ip: "Added successfully" });
-//         })
-//         .catch((err) => {
-//             res.status(400).send("Failed to create new record");
-//         });
-// });
+router.route("/ips/add").post((req, res) => {
+    client.db("myTest").collection("ips").insertOne(req.body)
+        .then(() => {
+            res.status(200).json({ ip: "Added successfully" });
+        })
+        .catch((err) => {
+            res.status(400).send("Failed to create new record");
+        });
+});
 
 // router.route("/ips").get((req, res) => {
 //     Ip.find((err, ips) => {
@@ -49,9 +52,9 @@ client.connect().then(c => {
 
 //     });
 // });
-app.get('/', (req, res) => {
-    res.send('HEY!');
-})
+// app.get('/', cors(), (req, res) => {
+//     res.send({ msg: "hello" });
+// })
 
 app.use("/", router);
 
