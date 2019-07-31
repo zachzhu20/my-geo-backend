@@ -38,7 +38,7 @@ router.route("/ips/add").post((req, res) => {
             res.status(200).json({ ip: "Added successfully" });
         })
         .catch((err) => {
-            res.status(400).send("Failed to create new record");
+            res.status(400).send({ err: "Failed to create new record" });
         });
 });
 
